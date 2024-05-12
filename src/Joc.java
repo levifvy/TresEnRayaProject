@@ -1,38 +1,33 @@
 public class Joc {
     private char[][] taulell;
-    private short torn;
-
-    public Joc() {
-        taulell = new char[3][3];
-        novaPartida();
-    }
+    private int torn;
 
     public char[][] getTaulell() {
         return taulell;
     }
 
-    public short getTorn() {
+    public int getTorn() {
         return torn;
     }
 
     public void novaPartida() {
+        taulell = new char[3][3];
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 taulell[i][j] = '-';
             }
         }
-        torn = 0;
+        torn = 1;
     }
 
-    public void jugar(short fila, String columna) {
-        short col = Short.parseShort(columna);
-        if (taulell[fila][col] == '-') {
-            taulell[fila][col] = (torn % 2 == 0) ? 'X' : 'O';
+    public void jugar(int fila, int columna) {
+        if (taulell[fila][columna] == '-') {
+            taulell[fila][columna] = (torn % 2 == 0) ? 'X' : 'O';
             torn++;
         }
     }
 
-    public boolean jugadaGuanyadora(short fila, short columna) {
+    public boolean jugadaGuanyadora(int fila, int columna) {
         char simbol = taulell[fila][columna];
 
         // Comprova fila

@@ -1,11 +1,14 @@
 import java.util.Scanner;
 
 public class Main {
-    private static TUI tui = new TUI();
-    private static Joc joc = new Joc();
+    private static TUI tui;
+    private static Joc joc;
     private static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
+        tui = new TUI();
+        joc = new Joc();
+
         boolean sortir = false;
         while (!sortir) {
             int opcio = tui.mostrarMenu();
@@ -23,7 +26,7 @@ public class Main {
                     sortir = true;
                     break;
                 default:
-                    System.out.println("Opció invàlida.");
+                    tui.mostrarMissatge("Opció invàlida.");
             }
         }
     }
@@ -42,20 +45,24 @@ public class Main {
         // Implementar la lógica para mostrar el menú de configuración
     }
 
+    private static void sortir() {
+        System.exit(0);
+    }
+
     private static void jugarPartida() {
         boolean partidaAcabada = false;
         while (!partidaAcabada) {
             tui.mostrarTaulell(joc.getTaulell(), joc.getTorn());
-            short[] jugada = tui.recollirJugada();
-            joc.jugar(jugada[0], String.valueOf(jugada[1]));
+            int[] jugada = tui.recollirJugada();
+            joc.jugar(jugada[0], jugada[1]);
             if (joc.jugadaGuanyadora(jugada[0], jugada[1])) {
                 tui.mostrarTaulell(joc.getTaulell(), joc.getTorn());
-                short guanyador = (joc.getTorn() == 0) ? (short) 1 : (short) 0;
+                int guanyador = (joc.getTorn() == 0) ? 1 : 0;
                 tui.fiDePartida(guanyador);
                 partidaAcabada = true;
             } else if (joc.getTorn() == 9) {
                 tui.mostrarTaulell(joc.getTaulell(), joc.getTorn());
-                tui.fiDePartida((short) -1);
+                tui.fiDePartida(-1);
                 partidaAcabada = true;
             }
         }
