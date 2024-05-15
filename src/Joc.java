@@ -1,3 +1,9 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Scanner;
 public class Joc {
     private char[][] taulell;
     private int torn;
@@ -10,10 +16,10 @@ public class Joc {
         return torn;
     }
 
-    public void novaPartida() {
-        taulell = new char[3][3];
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+    public void novaPartida(int mida) {
+        taulell = new char[mida][mida];
+        for (int i = 0; i < mida; i++) {
+            for (int j = 0; j < mida; j++) {
                 taulell[i][j] = '-';
             }
         }
@@ -31,24 +37,55 @@ public class Joc {
         char simbol = taulell[fila][columna];
 
         // Comprova fila
-        if (taulell[fila][0] == simbol && taulell[fila][1] == simbol && taulell[fila][2] == simbol) {
-            return true;
-        }
+        if (comprovarFila(fila, simbol)) return true;
 
         // Comprova columna
-        if (taulell[0][columna] == simbol && taulell[1][columna] == simbol && taulell[2][columna] == simbol) {
-            return true;
-        }
+        if (comprovarColumna(columna, simbol)) return true;
 
-        // Comprova diagonal
-        if (fila == columna && taulell[0][0] == simbol && taulell[1][1] == simbol && taulell[2][2] == simbol) {
-            return true;
-        }
+        // Comprova diagonal principal
+        if (fila == columna && comprovarDiagonalPrincipal(simbol)) return true;
 
-        if (fila + columna == 2 && taulell[0][2] == simbol && taulell[1][1] == simbol && taulell[2][0] == simbol) {
-            return true;
-        }
+        // Comprova diagonal secundaria
+        if (fila + columna == taulell.length - 1 && comprovarDiagonalSecundaria(simbol)) return true;
 
         return false;
+    }
+
+    private boolean comprovarFila(int fila, char simbol) {
+        for (int j = 0; j < taulell.length; j++) {
+            if (taulell[fila][j] != simbol) return false;
+        }
+        return true;
+    }
+
+    private boolean comprovarColumna(int columna, char simbol) {
+        for (int i = 0; i < taulell.length; i++) {
+            if (taulell[i][columna] != simbol) return false;
+        }
+        return true;
+    }
+
+    private boolean comprovarDiagonalPrincipal(char simbol) {
+        for (int i = 0; i < taulell.length; i++) {
+            if (taulell[i][i] != simbol) return false;
+        }
+        return true;
+    }
+
+    private boolean comprovarDiagonalSecundaria(char simbol) {
+        for (int i = 0; i < taulell.length; i++) {
+            if (taulell[i][taulell.length - 1 - i] != simbol) return false;
+        }
+        return true;
+    }
+
+    public void guardarConfiguracio(int mida) {
+        try {
+            FileWriter writer = new FileWriter("config");
+            writer.write(String.valueOf(mida));
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Error al guardar la configuració.");
+        }
     }
 }
