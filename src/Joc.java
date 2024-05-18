@@ -80,12 +80,10 @@ public class Joc {
     }
 
     public void guardarConfiguracio(int mida) {
-        try {
-            FileWriter writer = new FileWriter("config");
+        try (FileWriter writer = new FileWriter("config")) {
             writer.write(String.valueOf(mida));
-            writer.close();
         } catch (IOException e) {
-            errorCatchGuardarConfiguracio();
+            System.out.println("Error al guardar la configuració.");
         }
     }
 
@@ -95,8 +93,17 @@ public class Joc {
             if (!savedGamesFolder.exists()) {
                 savedGamesFolder.mkdir();
             }
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
-            String fileName = formatter.format(new Date());
+
+            // Eliminar cualquier archivo existente en el directorio "savedgames"
+            File[] files = savedGamesFolder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    file.delete();
+                }
+            }
+
+            // Crear nuevo archivo para guardar la partida
+            String fileName = "partida_guardada.txt";
             FileWriter writer = new FileWriter("savedgames/" + fileName);
             writer.write(String.valueOf(torn % 2 == 0 ? 2 : 1) + "\n");
             for (char[] fila : taulell) {
@@ -107,13 +114,7 @@ public class Joc {
             }
             writer.close();
         } catch (IOException e) {
-            errorCatchGuardarPartida();
+            System.out.println("Error al guardar la partida.");
         }
-    }
-    public String errorCatchGuardarConfiguracio(){
-        return "Error al guardar la configuració.";
-    }
-    public String errorCatchGuardarPartida(){
-        return "Error al guardar la partida.";
     }
 }

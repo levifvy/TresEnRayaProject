@@ -1,5 +1,3 @@
-import java.io.IOException;
-
 public class Main {
     private static Joc joc;
     private static TUI tui;
@@ -19,7 +17,7 @@ public class Main {
                     carregarPartida();
                     break;
                 case 3:
-                    configuracio(joc,tui);
+                    configuracio();
                     break;
                 case 4:
                     sortir();
@@ -60,7 +58,7 @@ public class Main {
         // Lògica per carregar partida
     }
 
-    private static void configuracio(Joc joc, TUI tui) {
+    private static void configuracio() {
         int mida = tui.medidaTablero();
         joc.guardarConfiguracio(mida);
     }
@@ -72,18 +70,4 @@ public class Main {
     private static void opcionNoEsperada() {
         tui.mostrarMissatgeError("Introdueix un valor entre 1 i 4.");
     }
-
-    private static void mostrarErrorCatchGuardarConfiguracio(){
-        String errorCatchConfiguracio = joc.errorCatchGuardarConfiguracio();
-        tui.errorGuardarConfiguracio(errorCatchConfiguracio);
-    }
-
-    private static void mostrarErrorCatchGuardarPartida(){
-        String errorCatchPartida = joc.errorCatchGuardarPartida();
-        tui.errorGuardarPartida(errorCatchPartida);
-    }
 }
-
-
-
-
