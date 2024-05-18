@@ -1,52 +1,50 @@
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Scanner;
+
 public class Main {
+    private static Joc joc;
+    private static TUI tui;
+
     public static void main(String[] args) {
-        Joc joc = new Joc();
-        TUI tui = new TUI();
+        joc = new Joc();
+        tui = new TUI();
         int opcio;
 
         do {
             opcio = tui.mostrarMenu();
-            System.out.println("Opcio seleccionada: " + opcio);
             switch (opcio) {
                 case 1:
-                    novaPartida(joc, tui);
+                    novaPartida();
                     break;
                 case 2:
-                    carregarPartida(joc, tui);
+                    carregarPartida();
                     break;
                 case 3:
-                    configuracio(joc, tui);
+                    configuracio(joc,tui);
                     break;
                 case 4:
-                    sortir(tui);
+                    sortir();
                     break;
                 default:
-                    opcionNoEsperada(tui);
+                    opcionNoEsperada();
                     break;
             }
         } while (opcio != 4);
     }
 
-    private static void novaPartida(Joc joc, TUI tui) {
+    private static void novaPartida() {
         int mida = joc.getTaulell() != null ? joc.getTaulell().length : tui.medidaTablero();
         joc.novaPartida(mida);
         tui.mostrarTaulell(joc.getTaulell(), joc.getTorn());
-        jugarPartida(joc, tui);
+        jugarPartida();
     }
 
-    private static void jugarPartida(Joc joc, TUI tui) {
+    private static void jugarPartida() {
         boolean partidaAcabada = false;
         int[] jugada;
         while (!partidaAcabada) {
             jugada = tui.recollirJugada();
             if (jugada[0] == -1 && jugada[1] == -1) {
-                guardarPartida(joc);
+                joc.guardarPartida();
                 break;
             }
             joc.jugar(jugada[0], jugada[1]);
@@ -58,30 +56,7 @@ public class Main {
         }
     }
 
-    private static void guardarPartida(Joc joc) {
-        try {
-            File savedGamesFolder = new File("savedgames");
-            if (!savedGamesFolder.exists()) {
-                savedGamesFolder.mkdir();
-            }
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
-            String fileName = formatter.format(new Date());
-            FileWriter writer = new FileWriter("savedgames/" + fileName);
-            writer.write(String.valueOf(joc.getTorn() % 2 == 0 ? 2 : 1) + "\n");
-            char[][] taulell = joc.getTaulell();
-            for (char[] fila : taulell) {
-                for (char casella : fila) {
-                    writer.write(casella + " ");
-                }
-                writer.write("\n");
-            }
-            writer.close();
-        } catch (IOException e) {
-            System.out.println("Error al guardar la partida.");
-        }
-    }
-
-    private static void carregarPartida(Joc joc, TUI tui) {
+    private static void carregarPartida() {
         // Lògica per carregar partida
     }
 
@@ -90,11 +65,25 @@ public class Main {
         joc.guardarConfiguracio(mida);
     }
 
-    private static void sortir(TUI tui) {
+    private static void sortir() {
         tui.mostrarMissatge("Adeu!");
     }
 
-    private static void opcionNoEsperada(TUI tui){
+    private static void opcionNoEsperada() {
         tui.mostrarMissatgeError("Introdueix un valor entre 1 i 4.");
     }
+
+    private static void mostrarErrorCatchGuardarConfiguracio(){
+        String errorCatchConfiguracio = joc.errorCatchGuardarConfiguracio();
+        tui.errorGuardarConfiguracio(errorCatchConfiguracio);
+    }
+
+    private static void mostrarErrorCatchGuardarPartida(){
+        String errorCatchPartida = joc.errorCatchGuardarPartida();
+        tui.errorGuardarPartida(errorCatchPartida);
+    }
 }
+
+
+
+

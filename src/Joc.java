@@ -3,7 +3,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Scanner;
+
 public class Joc {
     private char[][] taulell;
     private int torn;
@@ -85,7 +85,35 @@ public class Joc {
             writer.write(String.valueOf(mida));
             writer.close();
         } catch (IOException e) {
-            System.out.println("Error al guardar la configuració.");
+            errorCatchGuardarConfiguracio();
         }
+    }
+
+    public void guardarPartida() {
+        try {
+            File savedGamesFolder = new File("savedgames");
+            if (!savedGamesFolder.exists()) {
+                savedGamesFolder.mkdir();
+            }
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
+            String fileName = formatter.format(new Date());
+            FileWriter writer = new FileWriter("savedgames/" + fileName);
+            writer.write(String.valueOf(torn % 2 == 0 ? 2 : 1) + "\n");
+            for (char[] fila : taulell) {
+                for (char casella : fila) {
+                    writer.write(casella + " ");
+                }
+                writer.write("\n");
+            }
+            writer.close();
+        } catch (IOException e) {
+            errorCatchGuardarPartida();
+        }
+    }
+    public String errorCatchGuardarConfiguracio(){
+        return "Error al guardar la configuració.";
+    }
+    public String errorCatchGuardarPartida(){
+        return "Error al guardar la partida.";
     }
 }

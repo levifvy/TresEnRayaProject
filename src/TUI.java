@@ -1,14 +1,12 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Scanner;
+
 public class TUI {
     Scanner sc = new Scanner(System.in);
 
     public int mostrarMenu() {
-        int opcion;
+        int opcion = 0;
+        boolean inputValido = false;
+
         do {
             System.out.println("\nMenú:");
             System.out.println("1. Nova partida");
@@ -16,8 +14,18 @@ public class TUI {
             System.out.println("3. Configuració");
             System.out.println("4. Sortir");
             System.out.print("Selecciona una opció: ");
-            opcion = sc.nextInt();
-        } while(opcion < 1 || opcion > 4);
+            try {
+                opcion = Integer.parseInt(sc.nextLine());
+                if (opcion >= 1 && opcion <= 4) {
+                    inputValido = true;
+                } else {
+                    System.out.println("Introdueix un valor entre 1 i 4.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Introdueix un valor entre 1 i 4.");
+            }
+        } while (!inputValido);
+
         return opcion;
     }
 
@@ -72,6 +80,14 @@ public class TUI {
     }
 
     public void mostrarMissatge(String missatge){
+        System.out.println(missatge);
+    }
+
+    public void errorGuardarConfiguracio(String missatge){
+        System.out.println(missatge);
+    }
+
+    public void errorGuardarPartida(String missatge){
         System.out.println(missatge);
     }
 }
