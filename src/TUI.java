@@ -44,43 +44,43 @@ public class TUI {
         int[] jugada = new int[2];
         System.out.print("Introdueix la fila (-1 per a guardar partida): ");
         jugada[0] = sc.nextInt();
-        System.out.print("Introdueix la columna (-1 per a guardar partida): ");
+        if (jugada[0] == -1) {
+            jugada[1] = -1;
+            return jugada;
+        }
+        System.out.print("Introdueix la columna: ");
         jugada[1] = sc.nextInt();
         return jugada;
+    }
+
+    public int medidaTablero() {
+        System.out.print("Introdueix la mida del taulell: ");
+        return Integer.parseInt(sc.nextLine());
     }
 
     public void fiDePartida(int guanyador) {
         if (guanyador == 0) {
             System.out.println("Empat!");
         } else {
-            System.out.println("Guanyador: Jugador " + ((guanyador == 1) ? "X" : "O"));
+            System.out.println("El jugador " + guanyador + " ha guanyat!");
         }
     }
 
-    public int medidaTablero() {
-        int medida = 3;
-        int opcion;
-        do {
-            System.out.println("Vols canviar la mida del tauler?");
-            System.out.println("1. Sí");
-            System.out.println("2. No");
-            opcion = sc.nextInt();
-            switch (opcion) {
-                case 1:
-                    System.out.println("Introdueix la nova mida (3-10): ");
-                    medida = sc.nextInt();
-                    break;
-            }
-        } while (opcion != 2);
-        return medida;
+    public void mostrarMissatge(String missatge) {
+        System.out.println(missatge);
     }
 
     public void mostrarMissatgeError(String missatge) {
-        System.out.println(missatge);
+        System.err.println(missatge);
     }
 
-    public void mostrarMissatge(String missatge){
-        System.out.println(missatge);
+    public int mostrarPartidesGuardades(String[] partidesGuardades) {
+        System.out.println("\nPartides guardades:");
+        for (int i = 0; i < partidesGuardades.length; i++) {
+            System.out.println((i + 1) + ". " + partidesGuardades[i]);
+        }
+        System.out.print("Selecciona una partida per carregar (introdueix el número): ");
+        return Integer.parseInt(sc.nextLine()) - 1;
     }
 
     public void errorGuardarConfiguracio(String missatge){
@@ -88,6 +88,9 @@ public class TUI {
     }
 
     public void errorGuardarPartida(String missatge){
+        System.out.println(missatge);
+    }
+    public void errorCatchCarregarPartida(String missatge){
         System.out.println(missatge);
     }
 }

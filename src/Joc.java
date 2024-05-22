@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -36,16 +38,9 @@ public class Joc {
     public boolean jugadaGuanyadora(int fila, int columna) {
         char simbol = taulell[fila][columna];
 
-        // Comprova fila
         if (comprovarFila(fila, simbol)) return true;
-
-        // Comprova columna
         if (comprovarColumna(columna, simbol)) return true;
-
-        // Comprova diagonal principal
         if (fila == columna && comprovarDiagonalPrincipal(simbol)) return true;
-
-        // Comprova diagonal secundaria
         if (fila + columna == taulell.length - 1 && comprovarDiagonalSecundaria(simbol)) return true;
 
         return false;
@@ -83,7 +78,7 @@ public class Joc {
         try (FileWriter writer = new FileWriter("config")) {
             writer.write(String.valueOf(mida));
         } catch (IOException e) {
-            System.out.println("Error al guardar la configuració.");
+            errorCatchGuardarConfiguracio();
         }
     }
 
@@ -94,16 +89,7 @@ public class Joc {
                 savedGamesFolder.mkdir();
             }
 
-            // Eliminar cualquier archivo existente en el directorio "savedgames"
-            File[] files = savedGamesFolder.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    file.delete();
-                }
-            }
-
-            // Crear nuevo archivo para guardar la partida
-            String fileName = "partida_guardada.txt";
+            String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".txt";
             FileWriter writer = new FileWriter("savedgames/" + fileName);
             writer.write(String.valueOf(torn % 2 == 0 ? 2 : 1) + "\n");
             for (char[] fila : taulell) {
@@ -114,7 +100,45 @@ public class Joc {
             }
             writer.close();
         } catch (IOException e) {
-            System.out.println("Error al guardar la partida.");
+            errorCatchGuardarPartida();
         }
+    }
+
+    public String[] llistarPartidesGuardades() {
+        File savedGamesFolder = new File("savedgames");
+        if (!savedGamesFolder.exists()) {
+            return null;
+        }
+        return savedGamesFolder.list((dir, name) -> name.endsWith(".txt"));
+    }
+
+    public void carregarPartida(String nomPartida) {
+        try {
+            File file = new File("savedgames/" + nomPartida);
+            java.util.List<String> lines = Files.readAllLines(Paths.get(file.toURI()));
+
+            torn = Integer.parseInt(lines.get(0));
+            int mida = lines.size() - 1;
+            taulell = new char[mida][mida];
+
+            for (int i = 0; i < mida; i++) {
+                String[] row = lines.get(i + 1).split(" ");
+                for (int j = 0; j < mida; j++) {
+                    taulell[i][j] = row[j].charAt(0);
+                }
+            }
+        } catch (IOException e) {
+            errorCatchCarregarPartida();
+        }
+    }
+
+    public String errorCatchGuardarConfiguracio(){
+        return "Error al guardar la configuració.";
+    }
+    public String errorCatchGuardarPartida(){
+        return "Error al guardar la partida.";
+    }
+    public String errorCatchCarregarPartida(){
+        return "Error al carregar la partida.";
     }
 }

@@ -55,7 +55,18 @@ public class Main {
     }
 
     private static void carregarPartida() {
-        // Lògica per carregar partida
+        String[] partidesGuardades = joc.llistarPartidesGuardades();
+        if (partidesGuardades == null || partidesGuardades.length == 0) {
+            tui.mostrarMissatge("No hi ha partides guardades.");
+            return;
+        }
+
+        int opcio = tui.mostrarPartidesGuardades(partidesGuardades);
+        if (opcio >= 0 && opcio < partidesGuardades.length) {
+            joc.carregarPartida(partidesGuardades[opcio]);
+            tui.mostrarTaulell(joc.getTaulell(), joc.getTorn());
+            jugarPartida();
+        }
     }
 
     private static void configuracio() {
@@ -69,5 +80,19 @@ public class Main {
 
     private static void opcionNoEsperada() {
         tui.mostrarMissatgeError("Introdueix un valor entre 1 i 4.");
+    }
+
+    private static void mostrarErrorCatchGuardarConfiguracio(){
+        String errorCatchConfiguracio = joc.errorCatchGuardarConfiguracio();
+        tui.errorGuardarConfiguracio(errorCatchConfiguracio);
+    }
+
+    private static void mostrarErrorCatchGuardarPartida() {
+        String errorCatchPartida = joc.errorCatchGuardarPartida();
+        tui.errorGuardarPartida(errorCatchPartida);
+    }
+    private static void mostrarErrorCatchCarregarPartida() {
+        String errorCatchCarregarPartida = joc.errorCatchCarregarPartida();
+        tui.errorCatchCarregarPartida(errorCatchCarregarPartida);
     }
 }
