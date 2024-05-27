@@ -9,6 +9,7 @@ import java.util.Date;
 public class Joc {
     private char[][] taulell;
     private int torn;
+    private int midaTaulell = 3; // Mida predeterminada
 
     public char[][] getTaulell() {
         return taulell;
@@ -16,6 +17,10 @@ public class Joc {
 
     public int getTorn() {
         return torn;
+    }
+
+    public int getMidaTaulell() {
+        return midaTaulell;
     }
 
     public void novaPartida(int mida) {
@@ -77,8 +82,21 @@ public class Joc {
     public void guardarConfiguracio(int mida) {
         try (FileWriter writer = new FileWriter("config")) {
             writer.write(String.valueOf(mida));
+            midaTaulell = mida; // Actualizar la mida del taulell
         } catch (IOException e) {
-            errorCatchGuardarConfiguracio();
+            // Gestionar l'error de manera apropiada si es necesario
+        }
+    }
+
+    public void carregarConfiguracio() {
+        try {
+            File file = new File("config");
+            if (file.exists()) {
+                String config = new String(Files.readAllBytes(Paths.get("config")));
+                midaTaulell = Integer.parseInt(config.trim());
+            }
+        } catch (IOException e) {
+            // Gestionar l'error de manera apropiada si es necesario
         }
     }
 
@@ -100,7 +118,7 @@ public class Joc {
             }
             writer.close();
         } catch (IOException e) {
-            errorCatchGuardarPartida();
+            System.out.println("Error al guardar la partida.");
         }
     }
 
@@ -128,17 +146,7 @@ public class Joc {
                 }
             }
         } catch (IOException e) {
-            errorCatchCarregarPartida();
+            System.out.println("Error al carregar la partida.");
         }
-    }
-
-    public String errorCatchGuardarConfiguracio(){
-        return "Error al guardar la configuració.";
-    }
-    public String errorCatchGuardarPartida(){
-        return "Error al guardar la partida.";
-    }
-    public String errorCatchCarregarPartida(){
-        return "Error al carregar la partida.";
     }
 }

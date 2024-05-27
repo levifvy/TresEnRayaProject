@@ -14,15 +14,12 @@ public class TUI {
             System.out.println("3. Configuració");
             System.out.println("4. Sortir");
             System.out.print("Selecciona una opció: ");
+
             try {
                 opcion = Integer.parseInt(sc.nextLine());
-                if (opcion >= 1 && opcion <= 4) {
-                    inputValido = true;
-                } else {
-                    System.out.println("Introdueix un valor entre 1 i 4.");
-                }
+                inputValido = true;
             } catch (NumberFormatException e) {
-                System.out.println("Introdueix un valor entre 1 i 4.");
+                mostrarMissatgeError("Introdueix un valor vàlid.");
             }
         } while (!inputValido);
 
@@ -30,7 +27,7 @@ public class TUI {
     }
 
     public void mostrarTaulell(char[][] taulell, int torn) {
-        System.out.println("\nTaulell:");
+        System.out.println("Taulell:");
         for (int i = 0; i < taulell.length; i++) {
             for (int j = 0; j < taulell[i].length; j++) {
                 System.out.print(taulell[i][j] + " ");
@@ -46,16 +43,45 @@ public class TUI {
         jugada[0] = sc.nextInt();
         if (jugada[0] == -1) {
             jugada[1] = -1;
+            sc.nextLine(); // Consume newline
             return jugada;
         }
-        System.out.print("Introdueix la columna: ");
+        System.out.print("Introdueix la columna (-1 per a guardar partida): ");
         jugada[1] = sc.nextInt();
+        sc.nextLine(); // Consume newline
         return jugada;
     }
 
-    public int medidaTablero() {
-        System.out.print("Introdueix la mida del taulell: ");
-        return Integer.parseInt(sc.nextLine());
+    public int mostrarMenuConfiguracio() {
+        int mida = -1;
+        boolean inputValido = false;
+
+        do {
+            System.out.println("\nConfiguració:");
+            System.out.println("1. Canviar mida del taulell");
+            System.out.println("2. Tornar enrere");
+            System.out.print("Selecciona una opció: ");
+            int opcio = Integer.parseInt(sc.nextLine());
+
+            switch (opcio) {
+                case 1:
+                    System.out.print("Introdueix la nova mida del taulell (3-10): ");
+                    mida = Integer.parseInt(sc.nextLine());
+                    if (mida >= 3 && mida <= 10) {
+                        inputValido = true;
+                    } else {
+                        mostrarMissatgeError("La mida ha de ser entre 3 i 10.");
+                    }
+                    break;
+                case 2:
+                    return -1;
+                default:
+                    mostrarMissatgeError("Introdueix una opció vàlida.");
+                    break;
+            }
+        } while (!inputValido);
+
+        return mida;
     }
 
     public void fiDePartida(int guanyador) {
@@ -81,16 +107,5 @@ public class TUI {
         }
         System.out.print("Selecciona una partida per carregar (introdueix el número): ");
         return Integer.parseInt(sc.nextLine()) - 1;
-    }
-
-    public void errorGuardarConfiguracio(String missatge){
-        System.out.println(missatge);
-    }
-
-    public void errorGuardarPartida(String missatge){
-        System.out.println(missatge);
-    }
-    public void errorCatchCarregarPartida(String missatge){
-        System.out.println(missatge);
     }
 }

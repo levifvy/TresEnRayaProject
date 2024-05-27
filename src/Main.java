@@ -5,6 +5,10 @@ public class Main {
     public static void main(String[] args) {
         joc = new Joc();
         tui = new TUI();
+
+        // Cargar configuración al inicio
+        joc.carregarConfiguracio();
+
         int opcio;
 
         do {
@@ -30,7 +34,7 @@ public class Main {
     }
 
     private static void novaPartida() {
-        int mida = joc.getTaulell() != null ? joc.getTaulell().length : tui.medidaTablero();
+        int mida = joc.getTaulell() != null ? joc.getTaulell().length : joc.getMidaTaulell();
         joc.novaPartida(mida);
         tui.mostrarTaulell(joc.getTaulell(), joc.getTorn());
         jugarPartida();
@@ -70,8 +74,10 @@ public class Main {
     }
 
     private static void configuracio() {
-        int mida = tui.medidaTablero();
-        joc.guardarConfiguracio(mida);
+        int novaMida = tui.mostrarMenuConfiguracio();
+        if (novaMida != -1) {
+            joc.guardarConfiguracio(novaMida);
+        }
     }
 
     private static void sortir() {
@@ -80,19 +86,5 @@ public class Main {
 
     private static void opcionNoEsperada() {
         tui.mostrarMissatgeError("Introdueix un valor entre 1 i 4.");
-    }
-
-    private static void mostrarErrorCatchGuardarConfiguracio(){
-        String errorCatchConfiguracio = joc.errorCatchGuardarConfiguracio();
-        tui.errorGuardarConfiguracio(errorCatchConfiguracio);
-    }
-
-    private static void mostrarErrorCatchGuardarPartida() {
-        String errorCatchPartida = joc.errorCatchGuardarPartida();
-        tui.errorGuardarPartida(errorCatchPartida);
-    }
-    private static void mostrarErrorCatchCarregarPartida() {
-        String errorCatchCarregarPartida = joc.errorCatchCarregarPartida();
-        tui.errorCatchCarregarPartida(errorCatchCarregarPartida);
     }
 }
