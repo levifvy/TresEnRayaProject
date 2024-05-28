@@ -31,52 +31,60 @@ public class Joc {
             }
         }
         torn = 1;
+        midaTaulell = mida;
     }
 
     public void jugar(int fila, int columna) {
         if (taulell[fila][columna] == '-') {
-            taulell[fila][columna] = (torn % 2 == 0) ? 'X' : 'O';
+            taulell[fila][columna] = (torn % 2 == 0) ? 'O' : 'X';
             torn++;
         }
     }
 
     public boolean jugadaGuanyadora(int fila, int columna) {
         char simbol = taulell[fila][columna];
-
-        if (comprovarFila(fila, simbol)) return true;
-        if (comprovarColumna(columna, simbol)) return true;
-        if (fila == columna && comprovarDiagonalPrincipal(simbol)) return true;
-        if (fila + columna == taulell.length - 1 && comprovarDiagonalSecundaria(simbol)) return true;
-
-        return false;
+        return comprovarFila(fila, simbol) || comprovarColumna(columna, simbol)
+                || comprovarDiagonalPrincipal(simbol) || comprovarDiagonalSecundaria(simbol);
     }
 
     private boolean comprovarFila(int fila, char simbol) {
-        for (int j = 0; j < taulell.length; j++) {
-            if (taulell[fila][j] != simbol) return false;
+        for (int j = 0; j <= taulell.length - 3; j++) {
+            if (taulell[fila][j] == simbol && taulell[fila][j + 1] == simbol && taulell[fila][j + 2] == simbol) {
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 
     private boolean comprovarColumna(int columna, char simbol) {
-        for (int i = 0; i < taulell.length; i++) {
-            if (taulell[i][columna] != simbol) return false;
+        for (int i = 0; i <= taulell.length - 3; i++) {
+            if (taulell[i][columna] == simbol && taulell[i + 1][columna] == simbol && taulell[i + 2][columna] == simbol) {
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 
     private boolean comprovarDiagonalPrincipal(char simbol) {
-        for (int i = 0; i < taulell.length; i++) {
-            if (taulell[i][i] != simbol) return false;
+        for (int i = 0; i <= taulell.length - 3; i++) {
+            for (int j = 0; j <= taulell.length - 3; j++) {
+                if (taulell[i][j] == simbol && taulell[i + 1][j + 1] == simbol && taulell[i + 2][j + 2] == simbol) {
+                    return true;
+                }
+            }
         }
-        return true;
+        return false;
     }
 
     private boolean comprovarDiagonalSecundaria(char simbol) {
-        for (int i = 0; i < taulell.length; i++) {
-            if (taulell[i][taulell.length - 1 - i] != simbol) return false;
+        for (int i = 0; i <= taulell.length - 3; i++) {
+            for (int j = 2; j < taulell.length; j++) {
+                if (taulell[i][j] == simbol && taulell[i + 1][j - 1] == simbol && taulell[i + 2][j - 2] == simbol) {
+                    return true;
+                }
+            }
         }
-        return true;
+        return false;
     }
 
     public void guardarConfiguracio(int mida) {
@@ -118,7 +126,7 @@ public class Joc {
             }
             writer.close();
         } catch (IOException e) {
-            System.out.println("Error al guardar la partida.");
+            // Gestionar l'error de manera apropiada si es necesario
         }
     }
 
@@ -146,7 +154,7 @@ public class Joc {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error al carregar la partida.");
+            // Gestionar l'error de manera apropiada si es necesario
         }
     }
 }

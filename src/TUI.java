@@ -34,7 +34,7 @@ public class TUI {
             }
             System.out.println();
         }
-        System.out.println("Torn del jugador: " + ((torn % 2 == 0) ? "X" : "O"));
+        System.out.println("Torn del jugador: " + ((torn % 2 == 0) ? "O" : "X"));
     }
 
     public int[] recollirJugada() {
